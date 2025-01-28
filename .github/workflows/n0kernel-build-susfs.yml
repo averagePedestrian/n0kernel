@@ -1,4 +1,4 @@
-name: Build n0kernel - Neutron Clang
+name: Build n0kernel - susfs - Neutron Clang
 
 on:
   workflow_dispatch:
@@ -103,6 +103,18 @@ jobs:
         fi
         curl -LSs "https://raw.githubusercontent.com/rifsxd/KernelSU-Next/next/kernel/setup.sh" | bash -s next
       working-directory: ${{ steps.kernel.outputs.kernel-folder }}
+
+    - name: Adding SUSFS
+      run: |
+        git clone -b kernel-4.19 https://gitlab.com/simonpunk/susfs4ksu.git
+        cd susfs4ksu
+        cp ./kernel_patches/fs/* ${{ steps.kernel.outputs.kernel-folder }}/fs/
+        cp ./kernel_patches/include/linux/* ${{ steps.kernel.outputs.kernel-folder }}/include/linux/
+        wget -P ${{ steps.kernel.outputs.kernel-folder }}/KernelSU/ https://github.com/zenwav/kernel_build_action/blob/n0kernel-susfs/susfs4ksu/Implement-SUSFS-v1.5.4-for-KernelSU-Next.patch
+        cd ${{ steps.kernel.outputs.kernel-folder }}/KernelSU/ 
+        patch -p1 < Implement-SUSFS-v1.5.4-for-KernelSU-Next.patch
+      working-directory: ${{ steps.workspace.outputs.workspace-folder }}
+      id: susfs
 
     - name: Building kernel
       run: |
