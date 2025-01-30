@@ -685,8 +685,8 @@ KBUILD_LDFLAGS  += -Os
 else ifeq ($(cc-name),clang)
 #Enable hot cold split optimization
 KBUILD_CFLAGS   += -mllvm -hot-cold-split=true
-KBUILD_CFLAGS   += -O3 -march=armv8.2-a+lse+crypto+dotprod --cuda-path=/dev/null
-KBUILD_AFLAGS   += -O3 -march=armv8.2-a+lse+crypto+dotprod
+KBUILD_CFLAGS   += -O3 -march=armv8.2-a+lse+crypto+dotprod+crc+rdm+rcpc --cuda-path=/dev/null
+KBUILD_AFLAGS   += -O3 -march=armv8.2-a+lse+crypto+dotprod+crc+rdm+rcpc
 KBUILD_LDFLAGS  += -O3 --plugin-opt=O3
 else
 KBUILD_CFLAGS   += -O2
